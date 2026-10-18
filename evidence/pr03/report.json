@@ -5,7 +5,7 @@
     "version": "v1-w06",
     "archive_sha256": "6eda53e1c566f7f0a7e09d7afe1e5a6f3b98397175a7e57dede9a84c6d14d0fe"
   },
-  "commit": "e2ee97f4d94c3e05ddb51586de4cb23e3e75e071",
+  "commit": "06e6511b27cdc01dc7a1ec90104e03cd3d574e62",
   "commands": [
     "ros2 pkg create --build-type ament_python --node-name patrol patrol --dependencies rclpy geometry_msgs turtlesim_msgs",
     "colcon build --symlink-install --packages-select patrol",
