@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "practice_id": "PR03",
+  "course_kit": {
+    "version": "v1-w06",
+    "archive_sha256": "6eda53e1c566f7f0a7e09d7afe1e5a6f3b98397175a7e57dede9a84c6d14d0fe"
+  },
+  "commit": "e2ee97f4d94c3e05ddb51586de4cb23e3e75e071",
+  "commands": [
+    "ros2 pkg create --build-type ament_python --node-name patrol patrol --dependencies rclpy geometry_msgs turtlesim_msgs",
+    "colcon build --symlink-install --packages-select patrol",
+    "colcon test --packages-select patrol --event-handlers console_direct+",
+    "ros2 run patrol patrol --ros-args -r cmd_vel:=/turtle1/cmd_vel",
+    "ros2 topic hz /turtle1/cmd_vel"
+  ],
+  "tests": [
+    {
+      "name": "Проверка синтаксиса Python ноды",
+      "command": "python3 -m py_compile src/patrol/patrol/patrol_node.py",
+      "status": "passed"
+    },
+    {
+      "name": "Юнит-тест логики выбора команды",
+      "command": "colcon test --packages-select patrol --event-handlers console_direct+",
+      "status": "passed"
+    },
+    {
+      "name": "Проверка обнаружения топика после remap",
+      "command": "ros2 topic info /turtle1/cmd_vel --verbose",
+      "status": "passed"
+    },
+    {
+      "name": "Замер частоты публикации команд",
+      "command": "ros2 topic hz /turtle1/cmd_vel",
+      "status": "passed"
+    }
+  ],
+  "defect": {
+    "reproducer": "Запуск ноды patrol без remap: ros2 run patrol patrol. Нода публикует в относительный топик cmd_vel, который ROS преобразует в /patrol/cmd_vel.",
+    "root_cause": "Несовпадение полного имени топика. Издатель (patrol) публикует в /patrol/cmd_vel, а подписчик (turtlesim) слушает /turtle1/cmd_vel. Несмотря на правильный тип сообщения Twist, связь не устанавливается.",
+    "proof_after": "После добавления remap --ros-args -r cmd_vel:=/turtle1/cmd_vel топик издателя стал /turtle1/cmd_vel, turtlesim увидел издателя (Publisher count: 1), и черепаха начала двигаться. Частота публикации ~10 Гц соответствует периоду таймера 0.1 с."
+  },
+  "time": {
+    "contact_academic_hours": 2,
+    "self_study_hours": 2
+  },
+  "claims": {
+    "public_tests_passed": true,
+    "defect_reproduced": true,
+    "defect_fixed": true
+  },
+  "ai_used": true
+}
