@@ -10,7 +10,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     container:
-      image: osrf/ros:lyrical-desktop-full@sha256:abcdef123456789012345678901234567890123456789012345678901234abcd
+      image: osrf/ros:lyrical-desktop-full@sha256:6eda53e1c566f7f0a7e09d7afe1e5a6f3b98397175a7e57dede9a84c6d14d0fe
     steps:
       - name: Prepare Node for checkout
         shell: bash
